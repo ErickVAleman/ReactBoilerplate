@@ -1,8 +1,10 @@
 import React from 'react';
 import { render as Render } from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { History as HashHistory } from 'history';
+import { Router } from 'react-router-dom';
+import { createHashHistory } from 'history';
 import App from './App.jsx'
+
+const HashHistory = createHashHistory();
 
 Render(
   <Router history={HashHistory}
