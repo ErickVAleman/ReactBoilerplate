@@ -16,6 +16,7 @@ const miniCss = new miniCssExtractPlugin({
 
 module.exports = {
     entry: {
+        polyfill: 'babel-polyfill',
         app: './src/index.js',
     },
     module: {
