@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
-import { Layout, Menu, Icon } from 'antd';
+import { Layout, Menu, Icon, Card, Avatar } from 'antd';
 import PropTypes from 'prop-types';
+import logo from '../assets/logo.png';
 const { Sider } = Layout;
+const { Meta } = Card;
 
 class SiderApp extends Component {
   render() {
@@ -10,6 +12,11 @@ class SiderApp extends Component {
     return (
       <div>
         <Sider breakpoint='lg' collapsedWidth='0' style={{ height: '100%' }} >
+            <Card
+              style={{ width: 200 }}
+              cover={<img alt="example" src={logo} />}
+              actions={[<Icon type="setting" />, <Icon type="edit" />, <Icon type="ellipsis" />]}
+            />
           <Menu theme="dark" mode="inline" defaultSelectedKeys={[`${items.length}`]}>
             {items.map((item, key) => (
               <Menu.Item key={key + 1}>

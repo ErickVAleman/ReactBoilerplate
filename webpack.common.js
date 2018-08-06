@@ -40,6 +40,18 @@ module.exports = {
                     { loader: 'css-loader', options: { sourceMap: true }},
                     { loader: 'less-loader', options: { sourceMap: true, modifyVars: themeLess, javascriptEnabled: true }}
                 ] 
+            },
+            {
+              test: /\.(png|jpg|gif)$/,
+              use:[
+                {
+                  loader: 'file-loader',
+                  options: {
+                    name: '[path][name].[ext]',
+                    context: ''
+                  }
+                }
+              ]
             }
         ]
     },
