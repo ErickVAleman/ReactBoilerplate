@@ -41,15 +41,6 @@ class ListaArticulos extends Component {
   render() {
     return (
       <div>
-        <Modal
-          title="Vertically centered modal dialog"
-          wrapClassName="vertical-center-modal"
-          visible={this.state.visible}
-        >
-          <p>some contents...</p>
-          <p>some contents...</p>
-          <p>some contents...</p>
-        </Modal>
         <Search
           placeholder="input search text"
           onSearch={value => console.log(value)}
