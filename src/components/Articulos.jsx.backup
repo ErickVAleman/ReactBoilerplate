@@ -1,0 +1,97 @@
+import React, { Component } from 'react';
+import { Table, Button, Modal, Alert, Input } from 'antd';
+const { Search } = Input
+const apiList = `http://192.168.123.63:3001/api/v1/consulta/articulos`;
+
+
+class ListaArticulos extends Component {
+  state = {
+    lista: [],
+    loading: true,
+    selectedRowKeys: [],
+    visible: false,
+    URL: ''
+  }
+
+  columns = [
+    { title: 'Articulo', dataIndex: 'Articulo', width: '20%' },
+    { title: 'CodigoBarras', dataIndex: 'CodigoBarras', width: '20%' },
+    {
+      title: 'Nombre',
+      dataIndex: 'Nombre',
+      width: '20%',
+    },
+    { title: 'Descripcion', dataIndex: 'Descripcion', width: '20%' },
+    { title: 'Relacion', dataIndex: 'Relacion', width: '20%' },
+    { title: 'Ver', width: '20%', fixed: 'rigth',
+      render: (data, index, i) => {
+        return(
+            <Button key={i} type="primary" onClick={this.viewReport(data.URL)} >Ver</Button>
+          )
+      }
+    }
+  ]
+
+  viewReport (data) {
+    console.log('click')
+    console.log(data)
+  }
+  
+  async onFetch (input) {
+
+    try {
+      const req = await fetch(`${input}`)
+      try {
+        const lista = await req.json();
+        this.setState({ lista, loading: false })
+        return;
+      } catch (e) {
+        this.setState({ lista: e, loading: true })
+        return;
+      }
+    } catch (e) {
+      this.setState({ lista: e, loading: true })
+      return;
+    }
+  }
+
+  onSearch = async (SearchText) => {
+    let articulo = SearchText.replace(/ /g, '*')
+    if(!articulo) {
+      this.onFetch(`${apiList}`);
+      return;
+    }else {
+      this.onFetch(`${apiList}?q=*${articulo}*`);
+      return;
+    }
+  }
+
+  async componentWillMount() {
+    this.onFetch(`${apiList}`);
+    return;
+  }
+
+  showModal = (data) => {
+   this.setState({
+     visible: true,
+   });
+ }
+
+  render() {
+    return (
+      <div>
+        <Search
+          placeholder="input search text"
+          onSearch={(data) => this.onSearch(data)}
+          style={{ width: 200 }}
+        />
+        <br />
+        <br />
+        {this.state.lista.length
+          ? <Table columns={this.columns} dataSource={this.state.lista} bordered />
+          : <span>{this.state.lista.message}</span>}
+      </div>
+    )
+  }
+}
+export default ListaArticulos

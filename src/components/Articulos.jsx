@@ -1,73 +1,138 @@
 import React, { Component } from 'react';
-import { Table, Button, Modal, Alert, Input } from 'antd';
+import { Table, Button, Modal, Alert, Input, Pagination } from 'antd';
 const { Search } = Input
-const apiList = `http://127.0.0.1:3001/api/v1/consulta/articulos`;
+const apiList = `http://192.168.123.63:3001/api/v1/consulta/articulos`;
 
 
 class ListaArticulos extends Component {
   state = {
-    Lista: [],
-    Modal: false,
-    SearchText: '',
+    data : [],
+    filterDropdownVisible: false,
+    searchText: '',
+    loading: false,
+    pagination: {}
   }
 
-  columns = [
-    { title: 'Articulo', dataIndex: 'Articulo', width: '20%' },
-    { title: 'CodigoBarras', dataIndex: 'CodigoBarras', width: '20%' },
-    { 
-      title: 'Nombre', 
-      dataIndex: 'Nombre', 
-      width: '20%',
-      onFilter: (value, record) => record.name.toLowerCase().includes(value.toLowerCase()),
-      render: (text) => {
-        const { SearchText } = this.state;
-        return SearchText ? (<span> { text.split(new RegExp(`(<=${SearchText})|(=${SearchText})`, 'i')).map((fragment, i)=>(
-          fragment.toLowerCase() === SearchText.toLowerCase()
-            ? <span key={i} className="highlight">{fragment}</span> : fragment // eslint-disable-line
-        )) } </span>) : text
-      }
-    },
-    { title: 'Descripcion', dataIndex: 'Descripcion', width: '20%' },
-    { title: 'Relacion', dataIndex: 'Relacion', width: '20%' },
-    { title: 'Ver', width: '20%', fixed: 'rigth', render: (key) => <Button key={key} type="dashed" >Ver</Button> }
-  ]
-
-  async componentWillMount() {
-    try {
-      const req = await fetch(`${apiList}`);
-      try {
-        const Lista = await req.json();
-        this.setState({ Lista })
-        console.log(this.state.Lista)
-      } catch (error) {
-        this.setState({ Lista: null })
-      }
-    } catch (error) {
-      this.setState({ Lista: null })
+  componentDidMount(){
+    this.setState({ loading: true });
+    if(localStorage.getItem('data')){
+      const data = localStorage.getItem('data')
+      const pagination = { ...this.state.pagination };
+      pagination.position = 'both';
+     
+      this.setState(
+        {
+          data: JSON.parse(data),
+          loading: false,
+          pagination
+        }
+      )
+      return;
     }
+    fetch(apiList)
+    .then(data => data.json())
+    .then(lista => {
+      const pagination = { ...this.state.pagination };
+      pagination.position = 'both';
+      localStorage.setItem('data', JSON.stringify(lista));
+      console.log(lista)
+      const data = localStorage.getItem('data')
+      this.setState(
+        {
+          data: JSON.parse(data),
+          loading: false,
+          pagination
+        }
+      )
+      return;
+    })
+    .catch(e => {
+      console.log(e)
+    })
   }
 
-  onSearch = (SearchText) => {
-    this.setState({SearchText})
+  onInputChange = (e) => {
+    console.log()
+    this.setState({ searchText: e.target.value });
   }
 
-  onModal() {
-    this.setState({ Modal: !this.state.Modal })
+
+  onSearch = () => {
+    const { searchText } = this.state;
+    const reg = new RegExp(searchText, 'mgi');
+    let data = JSON.parse(localStorage.getItem('data'))
+    this.setState({
+      filterDropdownVisible: false,
+      data: data.map((record) => {
+        const match = record.Nombre.match(reg);
+        console.log(reg)
+        if (!match) {
+          return null;
+        }
+        return {
+          ...record,
+          Nombre: (
+            <span>
+              {record.Nombre.split(reg).map((text, i) => {
+                return (
+                  i > 0 ? [<span key={i} className="highlight">{match[0]}</span>, text] : text
+                )
+              })}
+            </span>
+          ),
+          Descripcion: (
+            <span>
+              {record.Descripcion.split(reg).map((text, i) => {
+                return (
+                  i > 0 ? [<span key={i} className="highlight">{match[0]}</span>, text] : text
+                )
+              })}
+            </span>
+          ),
+        };
+      }).filter(record => !!record),
+    });
   }
 
   render() {
+    const columns = [
+      { title: 'Articulo', dataIndex: 'Articulo', width: '10%' },
+      { title: 'CodigoBarras', dataIndex: 'CodigoBarras', width: '14%' },
+      {
+        title: 'Nombre',
+        dataIndex: 'Nombre',
+        width: '20%',
+        filterDropdown: (
+          <div className="custom-filter-dropdown">
+            <Input
+              placeholder="Search name"
+              value={this.state.searchText}
+              onChange={this.onInputChange}
+              onPressEnter={this.onSearch}
+            />
+            <Button type="primary" onClick={this.onSearch}>Search</Button>
+          </div>
+        ),
+        filterDropdownVisible: this.state.filterDropdownVisible,
+        onFilterDropdownVisibleChange: visible => this.setState({ filterDropdownVisible: visible }),
+  
+      },
+      { title: 'Descripcion', dataIndex: 'Descripcion', width: '30%' },
+      { title: 'Relacion', dataIndex: 'Relacion', width: '20%' },
+      {
+        title: 'Ver', width: '20%', fixed: 'rigth',
+      }
+    ]
     return (
       <div>
-        <Search
-          placeholder="input search text"
-          onSearch={(data) => this.onSearch(data)}
-          style={{ width: 200 }}
-        />
-        <br/>
-        <br/>
-        { this.state.Lista.length 
-          ? <Table columns={this.columns} dataSource={this.state.Lista} bordered /> 
-          : <span>{this.state.Lista.message}</span> }
+        <Table 
+          rowKey={(record, i) => i}
+          columns={columns} 
+          dataSource={this.state.data} 
+          bordered 
+          pagination={this.state.pagination}
+          loading={this.state.loading}
+          />
       </div>
     )
   }

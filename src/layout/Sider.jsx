@@ -12,11 +12,7 @@ class SiderApp extends Component {
     return (
       <div>
         <Sider breakpoint='lg' collapsedWidth='0' style={{ height: '100%' }} >
-            <Card
-              style={{ width: 200 }}
-              cover={<img alt="example" src={logo} />}
-              actions={[<Icon type="setting" />, <Icon type="edit" />, <Icon type="ellipsis" />]}
-            />
+          <div className="logo" ><img src={logo} alt="SPA"/></div>
           <Menu theme="dark" mode="inline" defaultSelectedKeys={[`${items.length}`]}>
             {items.map((item, key) => (
               <Menu.Item key={key + 1}>
