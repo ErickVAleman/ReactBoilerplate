@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Button, Modal, Card, Input, Row, Col } from 'antd';
+import { Table, Button, Modal, Card, Input, Row, Col, Spin } from 'antd';
 const { Search } = Input
 const apiList = `http://192.168.123.63:3001/api/v1/consulta/articulos`;
 
@@ -10,6 +10,7 @@ class ListaArticulos extends Component {
     filterDropdownVisible: false,
     searchText: '',
     loading: false,
+    loadingSearch: false,
     pagination: {},
     itemdata: {},
     modal2Visible: false
@@ -36,12 +37,22 @@ class ListaArticulos extends Component {
       .then(lista => {
         const pagination = { ...this.state.pagination };
         pagination.position = 'both';
-        localStorage.setItem('data', JSON.stringify(lista));
-        console.log(lista)
-        const data = localStorage.getItem('data')
+        if (lista) {
+          localStorage.setItem('data', JSON.stringify(lista));
+          console.log(lista)
+          const data = localStorage.getItem('data')
+          this.setState(
+            {
+              data: JSON.parse(data),
+              loading: false,
+              pagination
+            }
+          )
+          return;
+        }
         this.setState(
           {
-            data: JSON.parse(data),
+            data: lista,
             loading: false,
             pagination
           }
@@ -62,16 +73,16 @@ class ListaArticulos extends Component {
   }
 
   setModal2Visible() {
-    this.setState({ modal2Visible: !this.state.modal2Visible });
+    this.setState({ modal2Visible: !this.state.modal2Visible, loadingSearch: !this.state.loadingSearch });
   }
 
   fetchArticulo = async (e) => {
+    this.setModal2Visible()
     try {
       const metadata = await fetch(e.URL);
       try {
         const data = await metadata.json();
-        this.setState({ itemdata: data })
-        this.setModal2Visible()
+        this.setState({ itemdata: data, loadingSearch: !this.state.loadingSearch})
         console.log(this.state.itemdata)
       } catch (e) {
         console.log(e)
@@ -81,18 +92,6 @@ class ListaArticulos extends Component {
     }
 
   }
-
-  onRenderModal = () => (
-    <Modal
-      title="Hola"
-      centered
-      visible={this.state.modal2Visible}
-    >
-      <p>Hola</p>
-      <p>some contents...</p>
-      <p>some contents...</p>
-    </Modal>
-  )
 
   onSearch = () => {
     const { searchText } = this.state;
@@ -133,16 +132,15 @@ class ListaArticulos extends Component {
 
   render() {
     const columns = [
-      { title: 'Articulo', dataIndex: 'Articulo', width: '20%' },
-      { title: 'CodigoBarras', dataIndex: 'CodigoBarras', width: '20%' },
       {
         title: 'Nombre',
         dataIndex: 'Nombre',
         width: '20%',
         filterDropdownVisible: this.state.filterDropdownVisible,
         onFilterDropdownVisibleChange: visible => this.setState({ filterDropdownVisible: visible }),
-
       },
+      { title: 'Articulo', dataIndex: 'Articulo', width: '10%' },
+      { title: 'CodigoBarras', dataIndex: 'CodigoBarras', width: '20%' },
       { title: 'Descripcion', dataIndex: 'Descripcion', width: '20%' },
       { title: 'Relacion', dataIndex: 'Relacion', width: '20%' },
       {
@@ -151,32 +149,34 @@ class ListaArticulos extends Component {
         fixed: 'rigth',
         render: (e) => {
           return <Button type="primary" shape="circle" icon="search" onClick={() => this.fetchArticulo(e)} />
-        }
+        },
       }
     ]
-
-    const columnsCompras = [{
-      title: 'Cajas',
-      dataIndex: 'CantidadRegularUC',
-      key: 'CantidadRegularUC',
-      with: '20%'
-    }, {
-      title: 'Costo por caja',
-      dataIndex: 'CostoUnitarioNetoUC',
-      key: 'CostoUnitarioNetoUC',
-      with: '20%'
-    }, {
-      title: 'Fecha',
-      dataIndex: 'Fecha',
-      key: 'Fecha',
-      with: '20%'
-    }, {
-      title: 'NombreTercero',
-      dataIndex: 'NombreTercero',
-      key: 'NombreTercero',
-      with: '20%'
-    }];
-
+    const columnsCompras = [
+      {
+        title: 'Cajas',
+        dataIndex: 'CantidadRegularUC',
+        key: 'CantidadRegularUC',
+        with: '20%'
+      },
+      {
+        title: 'Costo por caja',
+        dataIndex: 'CostoUnitarioNetoUC',
+        key: 'CostoUnitarioNetoUC',
+        with: '20%'
+      },
+      {
+        title: 'Fecha',
+        dataIndex: 'Fecha',
+        key: 'Fecha',
+        with: '20%'
+      },
+      {
+        title: 'NombreTercero',
+        dataIndex: 'NombreTercero',
+        key: 'NombreTercero',
+        with: '20%'
+      }];
     const columnsExistencias = [
       {
         title: 'Suc',
@@ -231,39 +231,45 @@ class ListaArticulos extends Component {
     const { itemdata } = this.state
     return (
       <div>
-        <Modal
-          title={itemdata.Nombre}
-          centered
-          visible={this.state.modal2Visible}
-          onOk={() => this.setModal2Visible()}
-          width="70%"
-        >
-          <div style={{ background: '#ECECEC', padding: '30px' }} >
-            <Row gutter={16} >
-              <Col span={12} >
-                <Card >
-                  <p>Articulo: <span className="highlight">{itemdata.Articulo}</span></p>
-                  <p>Nombre: <span className="highlight">{itemdata.Nombre}</span></p>
-                  <p>Relacion: <span className="highlight">{itemdata.Relacion}</span></p>
-                  <p>CostoExistActual: <span className="highlight">{itemdata.CostoExistActual}</span></p>
-                </Card>
-              </Col>
-              <Col span={12} >
-                <Card >
-                  <p>CostoNetUCBO: <span className="highlight">{itemdata.CostoNetUCBO}</span></p>
-                  <p>ExistActualUC: <span className="highlight">{itemdata.ExistActualUC}</span></p>
-                  <p>Stock30UC: <span className="highlight">{itemdata.Stock30UC}</span></p>
-                </Card>
-              </Col>
-            </Row>
-          </div>
-          <div>
-            <br/>
-            <Table dataSource={itemdata.compras} columns={columnsCompras} bordered scroll={{ x: 500 }} title={() => 'Compras'} />
-            <Table dataSource={itemdata.existencias} columns={columnsExistencias} bordered scroll={{ x: 750 }} title={() => 'Existencias'} />
-          </div>
-        </Modal>
-
+        {
+          this.state.itemdata.length ? <h1>{this.state.itemdata.message}</h1>
+            : <div><Modal
+              title={itemdata.Nombre}
+              closable
+              centered
+              visible={this.state.modal2Visible}
+              onOk={() => this.setModal2Visible()}
+              width="60%"
+            >
+              <Spin spinning={this.state.loadingSearch} tip="loading...." >
+                <div style={{ background: '#ECECEC', padding: '10px' }} >
+                  <Row gutter={16} >
+                    <Col span={12} >
+                      <Card >
+                        <p>Articulo: <span className="highlight">{itemdata.Articulo}</span></p>
+                        <p>Nombre: <span className="highlight">{itemdata.Nombre}</span></p>
+                        <p>Relacion: <span className="highlight">{itemdata.Relacion}</span></p>
+                        <p>CostoExistActual: <span className="highlight">{itemdata.CostoExistActual}</span></p>
+                      </Card>
+                    </Col>
+                    <Col span={12} >
+                      <Card >
+                        <p>CostoNetUCBO: <span className="highlight">{itemdata.CostoNetUCBO}</span></p>
+                        <p>ExistActualUC: <span className="highlight">{itemdata.ExistActualUC}</span></p>
+                        <p>Stock30UC: <span className="highlight">{itemdata.Stock30UC}</span></p>
+                      </Card>
+                    </Col>
+                  </Row>
+                </div>
+                <div>
+                  <br />
+                  <Table dataSource={itemdata.compras} columns={columnsCompras} bordered scroll={{ x: 500 }} title={() => 'Compras'} />
+                  <Table dataSource={itemdata.existencias} columns={columnsExistencias} bordered scroll={{ x: 750 }} title={() => 'Existencias'} />
+                </div>
+              </Spin>
+            </Modal>
+            </div>
+        }
         <Search
           placeholder="Buscar Articulo"
           enterButton="Buscar"
@@ -282,6 +288,9 @@ class ListaArticulos extends Component {
           bordered
           pagination={this.state.pagination}
           loading={this.state.loading}
+          size='small'
+          scroll={{x:800, y:400}}
+          pagination={{ pageSize: 100 }}
         />
       </div>
     )

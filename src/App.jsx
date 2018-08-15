@@ -9,8 +9,8 @@ import './assets/styles.css'
 
 const { Content } = Layout;
 const ItemMenu = [
+  { icon: 'home', text: 'Inicio', path: '/'},
   { icon: 'user', text: 'Articulos', path: '/Articulos' },
-  { icon: 'user', text: 'Item2', path: '/'}
 ]
 
 class App extends Component {

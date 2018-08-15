@@ -1,3 +1,4 @@
+
 .logo {
     height: 150px;
     margin: 0px;
@@ -23,4 +24,12 @@
 
 .highlight {
   color: #f50;
+}
+.home {
+  height: 80vh;
+  width: 100%;
+}
+.home {
+  background-image: url('../assets/logo.png');
+  background-size: 100% 100%;
 }

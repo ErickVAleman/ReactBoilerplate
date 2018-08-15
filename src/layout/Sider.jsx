@@ -11,7 +11,7 @@ class SiderApp extends Component {
     const { items } = this.props
     return (
       <div>
-        <Sider breakpoint='lg' collapsedWidth='0' style={{ height: '100%' }} >
+        <Sider breakpoint='lg' collapsedWidth='0' style={{ height: '100%'}} >
           <div className="logo" ><img src={logo} alt="SPA"/></div>
           <Menu theme="dark" mode="inline" defaultSelectedKeys={[`${items.length}`]}>
             {items.map((item, key) => (
