@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom'
 import { Layout } from 'antd';
 import { HeaderApp, FooterApp, SiderApp } from './layout';
-import { Articulos } from './components';
+import { Articulos, AskArticulos } from './components';
 import Home from './Home.jsx';
 import NoMatch from './404.jsx';
 import './assets/styles.css'
@@ -11,6 +11,7 @@ const { Content } = Layout;
 const ItemMenu = [
   { icon: 'home', text: 'Inicio', path: '/'},
   { icon: 'user', text: 'Articulos', path: '/Articulos' },
+  { icon: 'user', text: 'test', path: '/test' },
 ]
 
 class App extends Component {
@@ -28,6 +29,7 @@ class App extends Component {
                 <Switch>
                   <Route exact path='/' component={Home} />
                   <Route path='/Articulos' component={Articulos} />
+                  <Route path='/test' component={AskArticulos} />
                   <Route component={NoMatch} />
                 </Switch>
               </div>

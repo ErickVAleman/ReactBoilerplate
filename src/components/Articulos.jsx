@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropType from 'prop-types';
 import { Table, Button, Modal, Card, Input, Row, Col, Spin } from 'antd';
 const { Search } = Input
 const apiList = `http://192.168.123.63:3001/api/v1/consulta/articulos`;
@@ -16,13 +17,12 @@ class ListaArticulos extends Component {
     modal2Visible: false
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.setState({ loading: true });
     if (localStorage.getItem('data')) {
       const data = localStorage.getItem('data')
       const pagination = { ...this.state.pagination };
       pagination.position = 'both';
-
       this.setState(
         {
           data: JSON.parse(data),
@@ -66,6 +66,7 @@ class ListaArticulos extends Component {
 
   onInputChange = (e) => {
     this.setState({ searchText: e.target.value });
+    console.log(this.state.searchText)
   }
 
   onClickChangeItem = (e) => {
@@ -73,7 +74,7 @@ class ListaArticulos extends Component {
   }
 
   setModal2Visible() {
-    this.setState({ modal2Visible: !this.state.modal2Visible, loadingSearch: !this.state.loadingSearch });
+    this.setState({ modal2Visible: !this.state.modal2Visible, loadingSearch: !this.state.loadingSearch, itemdata: {} });
   }
 
   fetchArticulo = async (e) => {
@@ -90,7 +91,6 @@ class ListaArticulos extends Component {
     } catch (e) {
       console.log(e)
     }
-
   }
 
   onSearch = () => {
@@ -228,7 +228,7 @@ class ListaArticulos extends Component {
         with: '20%'
       },
     ]
-    const { itemdata } = this.state
+    const { itemdata } = this.state;
     return (
       <div>
         {
@@ -288,7 +288,7 @@ class ListaArticulos extends Component {
           bordered
           pagination={this.state.pagination}
           loading={this.state.loading}
-          size='small'
+          size='middle'
           scroll={{x:800, y:400}}
           pagination={{ pageSize: 100 }}
         />
