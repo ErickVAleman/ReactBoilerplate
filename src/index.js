@@ -1,15 +1,12 @@
 import React from 'react';
 import { render as Render } from 'react-dom';
-import { Router } from 'react-router-dom';
-import { createHashHistory } from 'history';
+import { BrowserRouter as Router } from 'react-router-dom';1
 import App from './App.jsx'
-
-const HashHistory = createHashHistory();
+import sw from './sw'
 
 Render(
-  <Router history={HashHistory}
-    basename='/'
-  >
+  <Router basename='/'>
     <App />
   </Router>, document.getElementById('app')
 )
+sw();

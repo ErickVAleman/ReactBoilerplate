@@ -2,8 +2,10 @@ const path = require('path');
 const fs =  require('fs');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const cleanWebpackPlugin = require('clean-webpack-plugin');
-const miniCssExtractPlugin = require('mini-css-extract-plugin')
-const lessToJs = require('less-vars-to-js')
+const miniCssExtractPlugin = require('mini-css-extract-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
+const lessToJs = require('less-vars-to-js');
+const webpackPWAManifest = require('webpack-pwa-manifest');
 
 const themeLess = lessToJs(fs.readFileSync(path.join(__dirname,'./src/assets/styles.less'), 'utf8'))
 const newHtml = new htmlWebpackPlugin({ title: 'Build', filename: 'index.html', template: './public/index.html' });
@@ -12,7 +14,33 @@ const miniCss = new miniCssExtractPlugin({
     filename: '[name].[hash].css',
     chunkFilename: '[name].[id].css'
 })
-
+const Workbox = new WorkboxPlugin.GenerateSW({
+    clientsClaim: true,
+    skipWaiting: true,
+    runtimeCaching: [{
+        urlPattern: new RegExp('http://192.168.123.63:8081/'),
+        handler: 'staleWhileRevalidate'
+      }]
+})
+const pwaManifest =  new webpackPWAManifest({
+    name: 'Super de Todo PWA',
+    short_name: 'SPA App',
+    description: 'Super de Todo Progresive Web App',
+    background_color: '#ffffff',
+    start_url: '/',
+    theme_color: '#faad14',
+    crossorigin: 'use-credentials', //can be null, use-credentials or anonymous
+    icons: [
+      {
+        src: path.resolve('src/assets/logo.png'),
+        sizes: [96, 128, 192, 256, 384, 512] // multiple sizes
+      },
+      {
+        src: path.resolve('src/assets/logo.png'),
+        size: '1024x1024' // you can also use the specifications pattern
+      }
+    ]
+})
 
 module.exports = {
     entry: {
@@ -63,5 +91,8 @@ module.exports = {
         newHtml,
         cleanDist,
         miniCss,
-    ]
+        Workbox,
+        pwaManifest
+    ],
+    devtool: 'inline-source-map',
 }
