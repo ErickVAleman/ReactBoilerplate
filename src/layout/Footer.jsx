@@ -7,7 +7,7 @@ class FooterApp extends Component {
     return (
       <div>
         <Footer style={{ textAlign: 'center' }}>
-          Super Promociones de Acayucan
+          Desarrollado por Erick Villalobos Aleman para Super Promociones
         </Footer>
       </div>
     )

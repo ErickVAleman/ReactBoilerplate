@@ -9,4 +9,3 @@ Render(
     <App />
   </Router>, document.getElementById('app')
 )
-sw();

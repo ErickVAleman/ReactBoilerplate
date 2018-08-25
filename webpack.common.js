@@ -15,12 +15,9 @@ const miniCss = new miniCssExtractPlugin({
     chunkFilename: '[name].[id].css'
 })
 const Workbox = new WorkboxPlugin.GenerateSW({
+    swDest: 'sw-app-spa.js',
     clientsClaim: true,
     skipWaiting: true,
-    runtimeCaching: [{
-        urlPattern: new RegExp('http://192.168.123.63:8081/'),
-        handler: 'staleWhileRevalidate'
-      }]
 })
 const pwaManifest =  new webpackPWAManifest({
     name: 'Super de Todo PWA',

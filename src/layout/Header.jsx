@@ -6,7 +6,7 @@ class HeaderApp extends Component {
   render() {
     return (
       <div>
-        <Header style={{ background: '#faad14', textAlign: 'center' }} >
+        <Header style={{ background: '#faad14', textAlign: 'center'}} >
           <h1 style={{ color: '#FFF' }} > Super Promociones Acayucan </h1>
         </Header>
       </div>

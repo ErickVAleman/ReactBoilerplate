@@ -49,19 +49,25 @@ class Articulos extends Component {
           </div>
           <div>
             <br />
-            <Table dataSource={TableComprasModal}
+            <Table 
+              rowKey={(record) => record.uid}
+              dataSource={TableComprasModal}
               columns={ColComprasModal}
               bordered
               scroll={{ ...ScrollTableComprasModal }}
               title={TitleComprasModal}
               loading={LoadTable}
+              size="small"
             />
-            <Table dataSource={TableExistModal}
+            <Table
+              rowKey={(record) => record.uid} 
+              dataSource={TableExistModal}
               columns={ColExistenciasModal}
               bordered
               scroll={{ ...ScrollTableExistModal }}
               title={TitleExistModal}
               loading={LoadTable}
+              size="small"
             />
           </div>
         </Modal>
@@ -86,6 +92,8 @@ class Articulos extends Component {
           pagination={{ ...Pagination }}
           loading={LoadingTableP}
           bordered
+          size="middle"
+          
         />
       </div>
     )

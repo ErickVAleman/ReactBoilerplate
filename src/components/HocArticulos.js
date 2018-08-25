@@ -11,6 +11,7 @@ class HocArticulos extends Component {
     visibleModal: false,
     loadcard: true,
     loadtable: true,
+    loadtablep: true
 
   }
   fetch = async url => {
@@ -81,14 +82,9 @@ class HocArticulos extends Component {
 
   async componentDidMount() {
     const data = await this.fetch(api)
-    const localdata = localStorage.getItem('data')
-    if(data){
-      this.setState({data})
-      localStorage.removeItem('data')
-      localStorage.setItem('data', JSON.stringify(data))
-    }else {
-      this.setState({data: JSON.parse(localdata)});
-    }
+    localStorage.removeItem('data')
+    localStorage.setItem('data', JSON.stringify(data))
+    this.setState({data, loadtablep: false})
   }
   render(){
     const columns = [
@@ -189,16 +185,17 @@ class HocArticulos extends Component {
       <ViewArticulos 
         ColumnsArticulos={columns}
         TableArticulos={this.state.data} 
-        Scroll={{x: 800, y: 500}}
+        Scroll={{x: 800, y: 400}}
         Pagination={{ pageSize: 100 }}
         Size='middle'
-        LoadingTableP={false}
+        LoadingTableP={this.state.loadtablep}
         SearchTextP={this.state.search}
         OnInputChangeP={this.onSearchPrincipal}
         OnSearchText={this.onSearch}
         OkModal={this.switchModalState}
         CancelModal={this.switchModalState}
-        
+        WithModal='200'
+
         TitleModal='Ver Articulo'
         VisibleModal={this.state.visibleModal}
         ColComprasModal={columnsCompras}

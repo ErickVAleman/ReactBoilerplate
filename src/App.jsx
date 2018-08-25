@@ -21,10 +21,10 @@ class App extends Component {
           <SiderApp items={ItemMenu} />
           <Layout>
             {/* Header */}
-            <HeaderApp />
+            {/* <HeaderApp /> */}
             {/* Body */}
             <Content style={{ padding: 10 }} >
-              <div style={{ padding: 10, background: '#fff', minHeight: '86vh' }}>
+              <div style={{ padding: 10, minHeight: '86vh' }}>
                 <Switch>
                   <Route exact path='/' component={Home} />
                   <Route path='/Articulos' component={AskArticulos} />
