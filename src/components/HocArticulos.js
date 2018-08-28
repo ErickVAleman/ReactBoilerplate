@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Button } from 'antd'
 import ViewArticulos from './ViewArticulos.jsx';
-const api = `http://192.168.123.63:3001/api/v1/consulta/articulos`;
+const api = `https://api-superpromociones-spa.herokuapp.com/api/v1/consulta/articulos`;
 
 class HocArticulos extends Component {
   state = {
     search: '',
+    articulo: '',
     data: [],
     artData: {},
     visibleModal: false,
@@ -61,6 +62,12 @@ class HocArticulos extends Component {
       }).filter(record => !!record),
     });
   }
+
+  // getSearchAll = column => event => {
+  //   const { articulo } = this.state;
+  //   const 
+  // }
+
   getSearchArticle = async url => {
     this.setState({visibleModal: true})
     const artData = await this.fetch(url)
@@ -88,15 +95,15 @@ class HocArticulos extends Component {
   }
   render(){
     const columns = [
-      { key: 1 ,title: 'Nombre', dataIndex: 'Nombre', width: '20%',},
-      { key: 2 ,title: 'Articulo', dataIndex: 'Articulo', width: '10%' },
-      { key: 3 ,title: 'CodigoBarras', dataIndex: 'CodigoBarras', width: '20%' },
-      { key: 4 ,title: 'Descripcion', dataIndex: 'Descripcion', width: '20%' },
-      { key: 5 ,title: 'Relacion', dataIndex: 'Relacion', width: '20%' },
+      { key: 1 ,title: 'Nombre', dataIndex: 'Nombre', width: '180', fixed: 'left',},
+      { key: 2 ,title: 'Articulo', dataIndex: 'Articulo', width: '12%' },
+      { key: 3 ,title: 'CodigoBarras', dataIndex: 'CodigoBarras', width: '15%' },
+      { key: 4 ,title: 'Descripcion', dataIndex: 'Descripcion', width: '30%' },
+      { key: 5 ,title: 'Relacion', dataIndex: 'Relacion', width: '12%' },
       {
         key: 6,
         title: 'Ver',
-        width: '20%',
+        width: '5%',
         fixed: 'rigth',
         render: (e) => {
           return <Button type="primary" shape="circle" icon="search" onClick={() => this.getSearchArticle(e.URL)} />
@@ -185,7 +192,7 @@ class HocArticulos extends Component {
       <ViewArticulos 
         ColumnsArticulos={columns}
         TableArticulos={this.state.data} 
-        Scroll={{x: 800, y: 400}}
+        Scroll={{x: 1200, y: 400}}
         Pagination={{ pageSize: 100 }}
         Size='middle'
         LoadingTableP={this.state.loadtablep}
@@ -194,13 +201,13 @@ class HocArticulos extends Component {
         OnSearchText={this.onSearch}
         OkModal={this.switchModalState}
         CancelModal={this.switchModalState}
-        WithModal='200'
+        WithModal={800}
 
         TitleModal='Ver Articulo'
         VisibleModal={this.state.visibleModal}
         ColComprasModal={columnsCompras}
         TableComprasModal={compras}
-        ScrollTableComprasModal={{x:400}}
+        ScrollTableComprasModal={{x:800}}
         ColExistenciasModal={columnsExistencias}
         TableExistModal={existencias}
         ScrollTableExistModal={{x:800}}
