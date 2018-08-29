@@ -11,9 +11,9 @@ class SiderApp extends Component {
     const { items } = this.props
     return (
       <div>
-        <Sider breakpoint='lg' collapsedWidth='0' style={{ height: '100%'}} >
+        <Sider className='sider-app' breakpoint='lg' collapsedWidth='0'  >
           <div className="logo" ><img src={logo} alt="SPA"/></div>
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={[`${items.length}`]}>
+          <Menu theme="ligth" mode="inline" defaultSelectedKeys={[`${items.length}`]}>
             {items.map((item, key) => (
               <Menu.Item key={key + 1}>
                 <Link to={item.path} >

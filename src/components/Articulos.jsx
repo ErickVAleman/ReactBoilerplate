@@ -279,8 +279,8 @@ class ListaArticulos extends Component {
           onPressEnter={this.onSearch}
           onSearch={this.onSearch}
         />
-        <br />
-        <br />
+        <span>go</span>
+        <span>go</span>
         <Table
           rowKey={(record, i) => i}
           columns={columns}

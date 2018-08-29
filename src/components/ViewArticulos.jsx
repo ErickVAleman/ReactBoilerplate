@@ -83,6 +83,8 @@ class Articulos extends Component {
         />
         <br />
         <br />
+        <br />
+        <br />
         <Table
           size={Size}
           rowKey={(record) => record.uid}
