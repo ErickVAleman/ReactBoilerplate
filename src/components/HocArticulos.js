@@ -8,6 +8,7 @@ class HocArticulos extends Component {
     search: '',
     articulo: '',
     data: [],
+    dataSelected: [],
     artData: {},
     visibleModal: false,
     loadcard: true,
@@ -63,11 +64,6 @@ class HocArticulos extends Component {
     });
   }
 
-  // getSearchAll = column => event => {
-  //   const { articulo } = this.state;
-  //   const 
-  // }
-
   getSearchArticle = async url => {
     this.setState({visibleModal: true})
     const artData = await this.fetch(url)
@@ -85,6 +81,16 @@ class HocArticulos extends Component {
 
       }
     )
+  }
+
+  rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) =>{
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      this.setState({dataSelected: selectedRows})
+    },
+    getCheckboxProps: record => ({
+      ...record
+    })
   }
 
   async componentDidMount() {
@@ -194,7 +200,6 @@ class HocArticulos extends Component {
         TableArticulos={this.state.data} 
         Scroll={{x: 1200, y: 400}}
         Pagination={{ pageSize: 100 }}
-        Size='middle'
         LoadingTableP={this.state.loadtablep}
         SearchTextP={this.state.search}
         OnInputChangeP={this.onSearchPrincipal}
@@ -216,7 +221,7 @@ class HocArticulos extends Component {
         DataCard={dataC}
         TitleComprasModal={() => 'Compras'}
         TitleExistModal={() => 'Existencias'}
-        
+        RowSelectionProp= {this.rowSelection}
       /></div>
   }
 }

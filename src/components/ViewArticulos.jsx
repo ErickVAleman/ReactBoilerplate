@@ -16,15 +16,14 @@ class Articulos extends Component {
       TableExistModal, ColComprasModal,
       ColExistenciasModal, TitleComprasModal,
       TitleExistModal, ScrollTableComprasModal,
-      ScrollTableExistModal, DataCard
+      ScrollTableExistModal, DataCard, RowSelectionProp,
     } = this.props;
     console.log({ ...this.props })
     return (
       <div>
         <div><Modal
+          style={{ top: 20 }}
           title={TitleModal}
-          closable
-          centered
           visible={VisibleModal}
           onOk={OkModal}
           onCancel={CancelModal}
@@ -95,7 +94,7 @@ class Articulos extends Component {
           loading={LoadingTableP}
           bordered
           size="middle"
-          
+          rowSelection={RowSelectionProp}
         />
       </div>
     )
@@ -103,6 +102,7 @@ class Articulos extends Component {
 }
 
 Articulos.propType = {
+
   SearchTextP: PropType.string,
   TableArticulos: PropType.array.isRequired,
   ColumnsArticulos: PropType.object.isRequired,
@@ -118,6 +118,7 @@ Articulos.propType = {
   OnPressEnterP: PropType.func.isRequired,
   OnSearchP: PropType.func.isRequired,
   OnSearchText: PropType.func.isRequired,
+  RowSelectionProp: PropType.func.isRequired,
   //Modal Props
   TitleModal: PropType.string.isRequired,
   VisibleModal: PropType.bool.isRequired,
