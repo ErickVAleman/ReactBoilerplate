@@ -84,14 +84,20 @@ class HocArticulos extends Component {
   }
 
   rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) =>{
+    onChange: (selectedRowKeys, selectedRows) => {
       console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-      this.setState({dataSelected: selectedRows})
+    },
+    onSelect: (record, selected, selectedRows) => {
+      console.log(record, selected, selectedRows);
+    },
+    onSelectAll: (selected, selectedRows, changeRows) => {
+      console.log(selected, selectedRows, changeRows);
     },
     getCheckboxProps: record => ({
-      ...record
-    })
-  }
+      ...record  // Column configuration not to be checked
+    }),
+  };
+  
 
   async componentDidMount() {
     const data = await this.fetch(api)

@@ -18,7 +18,6 @@ class Articulos extends Component {
       TitleExistModal, ScrollTableComprasModal,
       ScrollTableExistModal, DataCard, RowSelectionProp,
     } = this.props;
-    console.log({ ...this.props })
     return (
       <div>
         <div><Modal
@@ -49,7 +48,7 @@ class Articulos extends Component {
           <div>
             <br />
             <Table 
-              rowKey={(record) => record.uid}
+              rowKey={(r,i) => i}
               dataSource={TableComprasModal}
               columns={ColComprasModal}
               bordered
@@ -59,7 +58,7 @@ class Articulos extends Component {
               size="small"
             />
             <Table
-              rowKey={(record) => record.uid} 
+              rowKey={(r, i) => i} 
               dataSource={TableExistModal}
               columns={ColExistenciasModal}
               bordered
@@ -86,14 +85,12 @@ class Articulos extends Component {
         <br />
         <Table
           size={Size}
-          rowKey={(record) => record.uid}
+          rowKey={record => record.Articulo}
           columns={ColumnsArticulos}
           dataSource={TableArticulos}
           scroll={{ ...Scroll }}
           pagination={{ ...Pagination }}
           loading={LoadingTableP}
-          bordered
-          size="middle"
           rowSelection={RowSelectionProp}
         />
       </div>
